@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>websocket发送文章</title>
+</head>
+
+<body>
+<div style="width: 500px; margin: 50px auto;">
+    <div id="success" style="margin: 10px auto; background: antiquewhite;">socket未连接</div>
+    <input type="text" id="input" value=""><button id='send' style="margin-left: 5px;">发送</button>
+</div>
+<div style="width: 500px; margin: 50px auto; background: beige;">
+    <div>使用的redis订阅发布模式，没法获取以前发布的内容，可以通过mysql存储或者其他的消息软件实现。</div>
+</div>
+</body>
+<script>
+    var socket = new WebSocket('ws://127.0.0.1:8092');
+    socket.onopen = function(event) {
+        document.getElementById('success').innerText = '后台socket端口连接成功';
+    };
+    var send = document.getElementById('send');
+    //向socket发送信息
+    send.addEventListener('click', function() {
+        var input = document.getElementById('input').value;
+        console.log(input);
+        socket.send(input);
+    });
+</script>
+
+</html>
