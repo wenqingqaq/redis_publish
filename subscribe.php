@@ -17,6 +17,7 @@ $redis->subscribe(array('AI'), 'callback');
 
 // 回调函数,这里写处理逻辑
 function callback($instance, $channelName, $msg){
+    echo "callback\n";
     //回调订阅到消息了，发送到websocket中，这样可以在网页显示出来
     $socket = socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
     $data = include 'common.php';
@@ -28,7 +29,7 @@ function callback($instance, $channelName, $msg){
         if(socket_write($socket,$message,strlen($message)) == false){
             echo 'fail to write'.socket_strerror(socket_last_error());
         }else{
-            echo 'client write success'.PHP_EOL;
+            echo 'redis subscribe : '.PHP_EOL;
             //读取服务端返回来的套接流信息
             while($callback = socket_read($socket,1024)){
                 echo 'server return message is:'.PHP_EOL.$callback;

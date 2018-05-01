@@ -3,12 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>websocket发送文章</title>
+    <title>admin</title>
+    <script src="jquery.min.js"></script>
 </head>
 
 <body>
 <div style="width: 500px; margin: 50px auto;">
-    <div id="success" style="margin: 10px auto; background: antiquewhite;">socket未连接</div>
+    <div id="success" style="margin: 10px auto; background: antiquewhite;">admin发送数据</div>
     <input type="text" id="input" value=""><button id='send' style="margin-left: 5px;">发送</button>
 </div>
 <div style="width: 500px; margin: 50px auto; background: beige;">
@@ -16,16 +17,14 @@
 </div>
 </body>
 <script>
-    var socket = new WebSocket('ws://127.0.0.1:8092');
-    socket.onopen = function(event) {
-        document.getElementById('success').innerText = '后台socket端口连接成功';
-    };
-    var send = document.getElementById('send');
-    //向socket发送信息
-    send.addEventListener('click', function() {
-        var input = document.getElementById('input').value;
-        console.log(input);
-        socket.send(input);
+    $(function () {
+        $('#send').click(function () {
+            var input = $('#input').val();
+            console.log(input);
+            $.get('sendRedis.php?msg='+input,function () {
+                console.log('msg send');
+            });
+        });
     });
 </script>
 

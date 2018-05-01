@@ -8,8 +8,8 @@
 
 //测试项端口发送信息
 
-$data = include 'common.php';
 $socket = socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
+$data = include 'common.php';
 if(socket_connect($socket,'127.0.0.1',$data['port']) == false){
     echo 'connect fail massege:'.socket_strerror(socket_last_error());
 }else{

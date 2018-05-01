@@ -24,7 +24,7 @@ class Server_socket
             $cycle = $this->accept;
             $cycle[] = $this->socket;
             socket_select($cycle, $write, $except, null);
-
+            echo 'cc = '.count($cycle)."\n";
             foreach ($cycle as $sock) {
                 if ($sock == $this->socket) {
                     echo "in \n";

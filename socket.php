@@ -36,40 +36,35 @@ if(socket_listen($socket,4)==false){
     echo 'server listen fail:'.socket_strerror(socket_last_error());
 }
 //让服务器无限获取客户端传过来的信息
+$cycle = array();
+$cycle[] = $socket;
+$first = false;
 do{
     echo "start\n";
-    $cycle = $accept = array();
-    $cycle[] = $socket;
     socket_select($cycle, $write, $except, null);
-    $first = false;
-    foreach ($cycle as $k => $c){
-        if($c == $socket){
-            $client = socket_accept($c);
+    foreach ($cycle as $k => $s){
+        if($s == $socket){
+            echo "in\n";
+            $client = socket_accept($s);
             if($client < 0){
                 echo "socket_accept() failed\n";
                 continue;
             }else{
-                $accept[] = $client;
+                $cycle[] = $client;
+                $first = false;
             }
         }else{
             echo "not\n";
-            $bytes = @socket_recv($socket,$buffer,2048,0);
+            $bytes = @socket_recv($s,$buffer,2048,0);
+            echo "b = ".$bytes."\n";
             if($bytes == 0) return;
             if(!$first){
-                hand($c,$buffer);
+                echo "first\n";
+                hand($s,$buffer);
                 $first = true;
             }else{
-                /*接收客户端传过来的信息*/
-                $accept_resource = socket_accept($socket);
-                /*socket_accept的作用就是接受socket_bind()所绑定的主机发过来的套接流*/
-                if($accept_resource !== false){
-                    /*读取客户端传过来的资源，并转化为字符串*/
-                    $string = trim(socket_read($accept_resource,1024));
-                    /*socket_read的作用就是读出socket_accept()的资源并把它转化为字符串*/
-                    echo mb_convert_encoding('服务端收到信息 :','GBK','UTF-8').$string.PHP_EOL;
-                    if($string == false) echo 'socket_read is fail';
-                    socket_close($accept_resource);
-                }
+                echo "send\n";
+                echo $bytes."\n";
             }
         }
     }
