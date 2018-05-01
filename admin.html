@@ -18,12 +18,14 @@
 </body>
 <script>
     $(function () {
+        var socket = new WebSocket('ws://127.0.0.1:8888');
+        socket.onopen = function(event) {
+            console.log('连接');
+        };
         $('#send').click(function () {
             var input = $('#input').val();
             console.log(input);
-            $.get('sendRedis.php?msg='+input,function () {
-                console.log('msg send');
-            });
+            socket.send(input);
         });
     });
 </script>

@@ -1,12 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yanwenqing
- * Date: 2018/4/28
- * Time: 16:26
- */
-
-//测试项端口发送信息
 
 $socket = socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
 $data = include 'common.php';

@@ -8,6 +8,11 @@
 
 $redis = new Redis();
 $res = $redis->connect('127.0.0.1', 6379);
-$res = $redis->publish('AI',$_GET['msg']);
+if(!array_key_exists('msg', $_GET)){
+	$msg = 'redis';
+}else{
+	$msg = $_GET['msg'];
+}
+$res = $redis->publish('AI',$msg);
 $redis->close();
-echo 'send '.$_GET['msg'].' success!';
+echo 'send redis '.$msg.' success!';

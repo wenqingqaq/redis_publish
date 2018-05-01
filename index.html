@@ -14,18 +14,18 @@
     <div>这里是接收信息</div>
     <ul id="msg">
         <li>message1</li>
-        <li>message1</li>
     </ul>
 </div>
 </body>
 <script>
-    var socket = new WebSocket('ws://127.0.0.1:8095');
+    var socket = new WebSocket('ws://127.0.0.1:8888');
     socket.onopen = function(event) {
         document.getElementById('success').innerText = '前台socket端口连接成功';
     };
 
     //收到服务器数据后的回调
     socket.onmessage = function(event) {
+        console.log('on_message');
         var content = event.data;
         if (content.length > 2) {
             var list = document.getElementsByTagName('li')[0];

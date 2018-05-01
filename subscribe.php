@@ -17,24 +17,23 @@ $redis->subscribe(array('AI'), 'callback');
 
 // 回调函数,这里写处理逻辑
 function callback($instance, $channelName, $msg){
-    echo "callback\n";
     //回调订阅到消息了，发送到websocket中，这样可以在网页显示出来
     $socket = socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
+    //接收套接流的最大超时时间1秒，后面是微秒单位超时时间，设置为零，表示不管它
+    socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array("sec" => 1, "usec" => 0));
+     //发送套接流的最大超时时间为6秒
+    socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array("sec" => 6, "usec" => 0));
     $data = include 'common.php';
     if(socket_connect($socket,'127.0.0.1',$data['port']) == false){
         echo 'connect fail massege:'.socket_strerror(socket_last_error());
     }else{
+        echo "redis receive msg : ".$msg."\n";
         $message = mb_convert_encoding('AI频道发送信息: '.$msg,'GBK','UTF-8');
         //向服务端写入字符串信息
-        if(socket_write($socket,$message,strlen($message)) == false){
+        if(!socket_write($socket,$message,strlen($message))){
             echo 'fail to write'.socket_strerror(socket_last_error());
-        }else{
-            echo 'redis subscribe : '.PHP_EOL;
-            //读取服务端返回来的套接流信息
-            while($callback = socket_read($socket,1024)){
-                echo 'server return message is:'.PHP_EOL.$callback;
-            }
         }
+        echo 'redis send socket success'."";
     }
-    socket_close($socket);//工作完毕，关闭套接流
+    socket_close($socket);
 }

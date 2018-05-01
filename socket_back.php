@@ -62,12 +62,53 @@ do{
                 echo "first\n";
                 hand($s,$buffer);
                 $first = true;
-            }else{
-                echo "send\n";
-                echo $bytes."\n";
             }
+            // 解码
+            $data = $this->decode($buffer);
+            print_r($data);
+            //编码
+            $data = $this->encode($data);
+            print_r($data);
         }
     }
 }while(true);
+
+/**
+ * 字符解码
+ */
+function decode($buffer) {
+    $len = $masks = $data = $decoded = null;
+    $len = ord($buffer[1]) & 127;
+    if ($len === 126) {
+        $masks = substr($buffer, 4, 4);
+        $data = substr($buffer, 8);
+    }
+    else if ($len === 127) {
+        $masks = substr($buffer, 10, 4);
+        $data = substr($buffer, 14);
+    }
+    else {
+        $masks = substr($buffer, 2, 4);
+        $data = substr($buffer, 6);
+    }
+    for ($index = 0; $index < strlen($data); $index++) {
+        $decoded .= $data[$index] ^ $masks[$index % 4];
+    }
+    return $decoded;
+}
+
+/**
+ * 字符编码
+ */
+function encode($buffer) {
+    $length = strlen($buffer);
+    if($length <= 125) {
+        return "\x81".chr($length).$buffer;
+    } else if($length <= 65535) {
+        return "\x81".chr(126).pack("n", $length).$buffer;
+    } else {
+        return "\x81".char(127).pack("xxxxN", $length).$buffer;
+    }
+}
 
 socket_close($socket);
