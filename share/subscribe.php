@@ -28,7 +28,7 @@ function callback($instance, $channelName, $msg){
         echo 'connect fail massege:'.socket_strerror(socket_last_error());
     }else{
         echo "redis receive msg : ".$msg."\n";
-        $message = mb_convert_encoding('AI频道发送信息: '.$msg,'GBK','UTF-8');
+        $message = mb_convert_encoding('AI: '.$msg,'GBK','UTF-8');
         //向服务端写入字符串信息
         if(!socket_write($socket,$message,strlen($message))){
             echo 'fail to write'.socket_strerror(socket_last_error());
