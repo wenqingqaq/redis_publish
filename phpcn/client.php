@@ -26,4 +26,3 @@ while($callback = socket_read($socket,1024)){
 
 socket_close($socket);
 echo "close\n";
-?>

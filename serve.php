@@ -3,11 +3,11 @@
 /** 
 * websocket 专用
 */  
-class Server_socket  
+class Serve
 {  
     private $socket;  
-    private $accept = [];  
-    private $hands = [];  
+    private $accept = array();
+    private $hands = array();
     function __construct($host, $port, $max)  
     {  
         $this->socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);  
@@ -18,14 +18,12 @@ class Server_socket
   
     public function start()  
     {  
-        while (true) {  
-            echo "while\n";
+        while (true) {
             $cycle = $this->accept;  
             $cycle[] = $this->socket;  
             socket_select($cycle, $write, $except, null);  
   
             foreach ($cycle as $sock) {
-                echo "foreach\n";
                 if ($sock == $this->socket) {  
                     echo "equal\n";
                     $this->accept[] = socket_accept($sock);  
@@ -55,9 +53,16 @@ class Server_socket
                         //通知redis
                     }          
                 }  
-            }  
-            sleep(1);  
-        }  
+            }
+
+            $msg = 'test';
+            foreach ($this->accept as $read_sock){
+                if ($read_sock == $this->socket) continue;
+                echo "write_ing".$read_sock."\n";
+                socket_write($read_sock,$msg,strlen($msg));
+            }
+            sleep(1);
+        }
     }/* end of start*/  
   
     /** 
@@ -73,9 +78,6 @@ class Server_socket
                     "Sec-WebSocket-Accept: " . $response . "\r\n\r\n";  
             socket_write($sock, $upgrade, strlen($upgrade));  
             $this->hands[$key] = true;  
-        }else{
-            echo "not hand \n";
-            //socket_write($sock, $data, strlen($data));
         }
     }/*dohandshake*/  
   
@@ -130,5 +132,5 @@ class Server_socket
 }/* end of class Server_socket*/  
 
 $data = require 'common.php';
-$server_socket = new Server_socket('127.0.0.1',$data['port'],0);
+$server_socket = new Serve('127.0.0.1',$data['port'],0);
 $server_socket->start(); sleep(1000);

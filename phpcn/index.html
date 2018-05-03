@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+</head>
+
+<body>
+<div style="width: 500px; margin: 50px auto;">
+    <div id="success" style="margin: 10px auto; background: antiquewhite;">socket未连接</div>
+</div>
+<div style="width: 500px; margin: 50px auto; background: beige;">
+    <div>这里是接收信息</div>
+    <ul id="msg">
+        <li>message1</li>
+    </ul>
+</div>
+</body>
+<script>
+    var socket = new WebSocket('ws://127.0.0.1:1234');
+    socket.onopen = function(event) {
+        document.getElementById('success').innerText = '前台socket端口连接成功';
+    };
+
+    //收到服务器数据后的回调
+    socket.onmessage = function(event) {
+        console.log('on_message');
+        var content = event.data;
+        if (content.length > 2) {
+            var list = document.getElementsByTagName('li')[0];
+            var msg = document.createTextNode(content);
+            var test = document.createElement('li');
+            test.appendChild(msg);
+            document.getElementById('msg').insertBefore(test,list);
+        }
+    };
+</script>
+
+</html>
