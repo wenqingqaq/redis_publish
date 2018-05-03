@@ -19,8 +19,8 @@ class Serve
     public function start()  
     {  
         while (true) {
-            $cycle = $this->accept;  
-            $cycle[] = $this->socket;  
+            $cycle = $this->accept;
+            $cycle[] = $this->socket;
             socket_select($cycle, $write, $except, null);  
   
             foreach ($cycle as $sock) {
@@ -33,11 +33,12 @@ class Serve
                 }else{
                     echo "not \n";
                     $length = socket_recv($sock, $buffer, 204800, null);  
-                    $key = array_search($sock, $this->accept);  
+                    $key = array_search($sock, $this->accept);
+                    echo "k = $key \n";
                     if (!$this->hands[$key]) {
                         $this->dohandshake($sock,$buffer,$key);  
                     }else if($length < 1){  
-                        $this->close($sock);  
+                        //$this->close($sock);
                     }else{  
                         echo "send \n";
                         // 解码  

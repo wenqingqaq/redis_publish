@@ -19,8 +19,10 @@ if(socket_connect($socket,'127.0.0.1',$data['port']) == false){
     if(socket_write($socket,$message,strlen($message)) == false){
         echo 'fail to write'.socket_strerror(socket_last_error());
     }
-    while($callback = socket_read($socket,1024)){
-        echo 'server return message is:'.PHP_EOL.$callback;
-    }
+    $callback = socket_read($socket,2048);
+    echo 'server return message is:'.$callback.PHP_EOL;
+//    while($callback = socket_read($socket,1024)){
+//        echo 'server return message is:'.PHP_EOL.$callback;
+//    }
 }
 socket_close($socket);//工作完毕，关闭套接流
