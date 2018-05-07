@@ -30,10 +30,11 @@ do{
            socket_set_nonblock($cfd);
            $clients[] = $cfd;
            echo "new client coming, fd=$cfd\n";
+           continue;
         }else{
             $msg = @socket_read($read_sock, 1024);
             $key = array_search($sock, $clients);
-            echo "k = ".$key."\n";
+            echo 'c = '.count($read)."\n";
             if($first){
                 echo "first \n";
                 hand($read_sock,$msg);
