@@ -5,7 +5,8 @@ class Ws{
 	private $maxuser = 1000;
 	public  $accept = array(); //连接的客户端
 	private $cycle = array(); //循环连接池
-	private $isHand = array(); 
+	private $isHand = array();
+	private $socket = '';
 	/*
 		接受三个回调函数，分别在新用户连接、有消息到达、用户断开时触发
 		function add、function send、function close
@@ -26,11 +27,13 @@ class Ws{
 		//最多10个人连接，超过的客户端连接会返回WSAECONNREFUSED错误
 		socket_listen($this->socket, $this->maxuser); 
 		while(TRUE) {
+		    echo "while \n";
 			$this->cycle = $this->accept;
 			$this->cycle[] = $this->socket;
 			//阻塞用，有新连接时才会结束
 			socket_select($this->cycle, $write, $except, null);
 			foreach ($this->cycle as $k => $v) {
+			    echo "foreach \n";
 				if($v === $this->socket) {
 					if (($accept = socket_accept($v)) < 0) {
 						continue;
