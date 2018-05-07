@@ -75,7 +75,6 @@
 	} 
 	function onMessage(evt) {
 		var data = JSON.parse(evt.data);
-		console.log(data);
 		switch (data.type) {
 			case 'text':
 				addMsg(data.msg);
@@ -97,9 +96,8 @@
 					return false;
 				}
 			
-			var ms = '<span style="color:#5CB85C;">'+$('name').value+'：</span>'+$('input').value;
-			console.log(ms);
-			ws.send(ms);
+			
+			ws.send('<span style="color:#5CB85C;">'+$('name').value+'：</span>'+$('input').value);
 			$('input').value = '';
 		}
 	}
@@ -111,10 +109,10 @@
 	
 	
 	function addMsg(msg) {
-		msg = JSON.parse(msg);
-		//var text = '用户' + msg.user + '说:\n' + msg.text + '\n';
-		var text = msg.text;
-		$('message').innerHTML += text+'<br />';
+        $('message').innerHTML += msg+'<br />';
+		// msg = JSON.parse(msg);
+		// var text = msg.text;
+		// $('message').innerHTML += text+'<br />';
 		$('message').scrollTop = $('message').scrollHeight;
 	}
 	function updataUserNum(msg) {
