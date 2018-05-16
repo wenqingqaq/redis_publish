@@ -12,7 +12,7 @@ $result = socket_connect($socket, $ip, $port);
 if ($result < 0) {
     echo "socket_connect() failed.\nReason: ($result) " . socket_strerror($result) . "\n";
 }
-$in = "wenqing_test_test \n";
+$in = "wenqing_test_test测试 \n";
 $in = utf8_encode($in);
 if(!socket_write($socket, $in, strlen($in))) {
     echo "socket_write() failed: reason: " . socket_strerror($socket) . "\n";
