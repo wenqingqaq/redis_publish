@@ -48,7 +48,9 @@ class Serve{
 				if (!$this->isHand[$index]) {
 					$this->upgrade($v, $data, $index); //首次握手，这个主要是http的是否使用的
 					//首次信息的回应
-                    $this->first($this,$data);
+                    $data = $this->decode($data);
+                    echo $data."<br/>";
+                    $this->first($this,$data,$index);
 				}
 				$data = $this->decode($data);
                 $this->send($data,$index,$this); //广播发送
@@ -122,17 +124,20 @@ class Serve{
      * 首次信息的回应
      * @param $ws
      * @param $msg
+     * @param $index
      */
-    public function first($ws,$msg) {
+    public function first($ws,$msg,$index) {
         if(preg_match('/wenqing/',$msg)){
-            echo "receive wenqing \n";
-            $this->send_to_all($msg, 'text',$ws);
+            $data = json_encode(array(
+                'text' => $msg,
+                'user' => $index,
+            ));
+            $this->send_to_all($data, 'text', $ws);
         }else{
             $data = count($ws->accept);
             echo 'data count = '.$data."\n";
             $this->send_to_all($data, 'num', $ws);
         }
-
     }
 
     public function send($data, $index, $ws) {

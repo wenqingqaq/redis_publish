@@ -13,6 +13,7 @@ if ($result < 0) {
     echo "socket_connect() failed.\nReason: ($result) " . socket_strerror($result) . "\n";
 }
 $in = "wenqing_test_test \n";
+$in = frame($in);
 if(!socket_write($socket, $in, strlen($in))) {
     echo "socket_write() failed: reason: " . socket_strerror($socket) . "\n";
 }
@@ -25,3 +26,15 @@ echo 'server return message is:'.PHP_EOL.$callback;
 //echo 'server return message is:'.$callback.PHP_EOL;
 
 socket_close($socket);
+
+function frame($s){
+    $a = str_split($s, 125);
+    if (count($a) == 1){
+        return "\x81" . chr(strlen($a[0])) . $a[0];
+    }
+    $ns = "";
+    foreach ($a as $o){
+        $ns .= "\x81" . chr(strlen($o)) . $o;
+    }
+    return $ns;
+}
