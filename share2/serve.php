@@ -1,31 +1,27 @@
 <?php
 class Serve{
 	private $host = '127.0.0.1';
-	private $port = 8888;
-	private $maxuser = 1000;
+	private $port = 8889;
+	private $maxUser = 1000;
 	public  $accept = array(); //连接的客户端
 	private $cycle = array(); //循环连接池
 	private $isHand = array();
 	private $socket = '';
-	/*
-		接受三个回调函数，分别在新用户连接、有消息到达、用户断开时触发
-		function add、function send、function close
-	*/
-	public $function = array();
-	//Constructor
-	function __construct($host = '', $port = '', $max = '') {
-		$this->host = $this->host;
-		$this->port = $this->port;
-		$this->maxuser = $this->maxuser;
-	}
-	//挂起socket
+
+	public function __construct()
+    {
+        $data = require 'common.php';
+        $this->port = $data['port'];
+    }
+
+    //挂起socket
 	public function start_server() {
 		$this->socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 		//允许使用本地地址
 		socket_set_option($this->socket, SOL_SOCKET, SO_REUSEADDR, TRUE); 
 		socket_bind($this->socket, $this->host, $this->port);
 		//最多10个人连接，超过的客户端连接会返回WSAECONNREFUSED错误
-		socket_listen($this->socket, $this->maxuser); 
+		socket_listen($this->socket, $this->maxUser); 
 		while(TRUE) {
 		    echo "while \n";
 			$this->cycle = $this->accept;
