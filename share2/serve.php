@@ -48,9 +48,9 @@ class Serve{
 				if (!$this->isHand[$index]) {
 					$this->upgrade($v, $data, $index); //首次握手，这个主要是http的是否使用的
 					//首次信息的回应
-                    $data = $this->decode($data);
-                    echo $data."<br/>";
+                    //$data = $this->decode($data);
                     $this->first($this,$data,$index);
+                    continue;
 				}
 				$data = $this->decode($data);
                 $this->send($data,$index,$this); //广播发送
@@ -132,7 +132,7 @@ class Serve{
                 'text' => $msg,
                 'user' => $index,
             ));
-            $this->send_to_all($data, 'text', $ws);
+            $this->send_to_all_first($data, 'text', $ws);
         }else{
             $data = count($ws->accept);
             echo 'data count = '.$data."\n";
@@ -149,6 +149,18 @@ class Serve{
     }
 
     public function send_to_all($data, $type, $ws){
+        $res = array(
+            'msg' => $data,
+            'type' => $type,
+        );
+        $res = json_encode($res);
+        $res = $ws->frame($res);
+        foreach ($ws->accept as $key => $value) {
+            socket_write($value, $res, strlen($res));
+        }
+    }
+
+    public function send_to_all_first($data, $type, $ws){
         $res = array(
             'msg' => $data,
             'type' => $type,
