@@ -7,5 +7,5 @@
  */
 
 return array(
-    'port' => 1234
+    'port' => 8080
 );

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/qrcode.min.js"></script>
+</head>
+<body>
+<div style="width: 500px; margin: 100px auto 5px auto;"><?php echo $sid;?></div>
+<div style="width: 500px; margin: 10px auto; font-weight: bold;" id="success">socket未连接</div>
+<div id="qrcode" style="width: 500px; height: 500px; margin: 0 auto;"></div>
+<script type="text/javascript">
+    new QRCode(document.getElementById("qrcode"), {
+        text: "http://jindo.dev.naver.com/collie",
+        width: 300,
+        height: 300,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    });
+
+    var socket = new WebSocket('ws://127.0.0.1:8888');
+    socket.onopen = function(event) {
+        document.getElementById('success').innerText = '前台socket端口连接成功';
+    };
+
+    socket.onmessage = function(event) {
+        console.log('on_message');
+    };
+</script>
+</body>
+</html>
